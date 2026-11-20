@@ -390,6 +390,7 @@ def save_pdf(
             else:
                 with open(output_path.with_suffix(".pdf"), "wb+") as f:
                     f.write(pdf_response.content)
+                return True
         except Exception as e:
             logger.warning(f"Could not download {pdf_url}: {e}")
     else:  # if no citation_pdf_url meta tag found, try other fallbacks

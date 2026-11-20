@@ -65,6 +65,7 @@ nav:
     - Getting Started: examples/getting-started.md
     - Paper Keyword Analysis: examples/paper-keyword-analysis.md
     - PDF Retrieval: examples/pdf-retrieval.md
+    - Topic Collection: examples/topic-collection.md
     - Scholar Metrics Analysis: examples/scholar-metrics-analysis.md
     - Self-Citation Analysis: examples/self-citation-analysis.md
 

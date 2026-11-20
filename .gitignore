@@ -146,3 +146,6 @@ paperscraper/server_dumps/*.json
 
 # ignore api keys
 api_keys.txt
+
+# collected papers (metadata, pdf, logs)
+/results/

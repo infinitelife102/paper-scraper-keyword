@@ -17,6 +17,9 @@ True
 
 `filepath` can be provided with or without `.pdf`. XML fallbacks write an `.xml`
 file next to the requested path when XML full text is the available format.
+`save_pdf` returns `True` only when a PDF or XML file is on disk. A PDF taken
+from the publisher `citation_pdf_url` tag is a successful save. A response that
+is not a PDF is not.
 
 Pass `save_metadata=True` to store paper metadata next to the downloaded file:
 

@@ -47,6 +47,13 @@ uv add paperscraper
 
     [:octicons-arrow-right-24: PDF retrieval](examples/pdf-retrieval.md)
 
+-   **Collect topic corpora**
+
+    Download the newest PubMed papers for hydropower, thermal power, rice,
+    wheat, and dairy, with one JSON sidecar beside each saved PDF or XML.
+
+    [:octicons-arrow-right-24: Topic collection](examples/topic-collection.md)
+
 -   **Inspect citation behavior**
 
     Query citation counts, author metrics, journal impact factors, and
@@ -81,6 +88,8 @@ inner lists define synonyms combined with `OR`.
   multi-source literature trend workflows.
 - Use [PDF Retrieval](examples/pdf-retrieval.md) for full-text download options
   and supported fallbacks.
+- Use [Topic collection](examples/topic-collection.md) to build a dated folder
+  of PDFs and JSON sidecars for the five built-in topics.
 - Use [Scholar Metrics Analysis](examples/scholar-metrics-analysis.md) for
   citation counts, author metrics, and journal metrics.
 - Use [Self-Citation Analysis](examples/self-citation-analysis.md) for

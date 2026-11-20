@@ -1,11 +1,3 @@
-[![build](https://github.com/jannisborn/paperscraper/actions/workflows/test_tip.yml/badge.svg?branch=main)](https://github.com/jannisborn/paperscraper/actions/workflows/test_tip.yml?query=branch%3Amain)
-[![build](https://github.com/jannisborn/paperscraper/actions/workflows/test_pypi.yml/badge.svg?branch=main)](https://github.com/jannisborn/paperscraper/actions/workflows/test_pypi.yml?query=branch%3Amain)
-[![build](https://github.com/jannisborn/paperscraper/actions/workflows/docs.yml/badge.svg?branch=main)](https://jannisborn.github.io/paperscraper/)
-[![License:
-MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PyPI version](https://badge.fury.io/py/paperscraper.svg)](https://badge.fury.io/py/paperscraper)
-[![Downloads](https://static.pepy.tech/badge/paperscraper)](https://pepy.tech/project/paperscraper)
-[![codecov](https://codecov.io/github/jannisborn/paperscraper/branch/main/graph/badge.svg?token=Clwi0pu61a)](https://codecov.io/github/jannisborn/paperscraper)
 # paperscraper
 
 `paperscraper` is a `python` package for scraping publication metadata or full text files
@@ -26,6 +18,7 @@ meta-analysis.
 2. [Examples](#examples)
    - [Paper Keyword Analysis](#paper-keyword-analysis)
    - [PDF Retrieval](#pdf-retrieval)
+   - [Topic collection](#topic-collection)
    - [Scholar Metrics Analysis](#scholar-metrics-analysis)
    - [Self-Citation Analysis](#self-citation-analysis)
 3. [Citation](#citation)
@@ -140,6 +133,7 @@ The README keeps examples short. The
 
 - [Paper Keyword Analysis](https://jannisborn.github.io/paperscraper/examples/paper-keyword-analysis/)
 - [PDF Retrieval](https://jannisborn.github.io/paperscraper/examples/pdf-retrieval/)
+- [Topic collection](docs/examples/topic-collection.md)
 - [Scholar Metrics Analysis](https://jannisborn.github.io/paperscraper/examples/scholar-metrics-analysis/)
 - [Self-Citation Analysis](https://jannisborn.github.io/paperscraper/examples/self-citation-analysis/)
 
@@ -186,10 +180,73 @@ from paperscraper.pdf import save_pdf
 save_pdf({"doi": "10.48550/arXiv.2207.03928"}, filepath="gt4sd_paper.pdf")
 ```
 
-Output: `True` when the file was saved.
+Output: `True` when a PDF or XML file is on disk, including a PDF taken from
+the publisher `citation_pdf_url` tag.
 
 See the [PDF retrieval example](https://jannisborn.github.io/paperscraper/examples/pdf-retrieval/)
 for batch downloads, fallbacks, publisher API keys, and downstream PDF analysis.
+
+### Topic collection
+
+`scripts/collect_topics.py` searches PubMed from newest to oldest for five
+topics and keeps a paper only when a PDF or XML file is saved. Each saved file
+gets a JSON sidecar with the same stem.
+
+```console
+uv run python scripts/collect_topics.py
+```
+
+Files are written to `D:/YYYYMMDD_paper/`, using the date the script starts.
+The default limit is 1500 saved papers per topic. Running the same command
+again on the same day resumes that folder. A later calendar day starts a new
+folder.
+
+```text
+D:/20260929_paper/
+  collect.log
+  power_hydro/
+    pubmed.jsonl
+    summary.json
+    state.json
+    progress.jsonl
+    202609/15/10.1007_s00267-026-02598-8.pdf
+    202609/15/10.1007_s00267-026-02598-8.json
+```
+
+`pubmed.jsonl` lists the saved papers. `summary.json` records the query and
+date span. `state.json` and `progress.jsonl` are the resume cursor. The sidecar
+JSON contains `title`, `authors`, `date`, `doi`, `journal`, `abstract`, and
+`source`.
+
+| Topic | Subject |
+| --- | --- |
+| `power_hydro` | Hydropower equipment and efficiency, retrofit, or design |
+| `power_thermal` | Thermal power plants and efficiency, retrofit, or design |
+| `crops_rice` | Rice yield, productivity, or production cost |
+| `crops_wheat` | Wheat yield, productivity, or production cost |
+| `dairy` | Dairy processing, including pasteurization, fermentation, and drying |
+
+Keyword groups inside a topic are combined with `AND`. Terms inside a group are
+combined with `OR` and searched in the title and abstract. The exact terms are
+`TOPICS` in `scripts/collect_topics.py`.
+
+```console
+uv run python scripts/collect_topics.py --limit 100 --topics power_hydro crops_rice
+uv run python scripts/collect_topics.py --metadata-only
+uv run python scripts/collect_topics.py --metadata-only --skip-existing
+```
+
+`--metadata-only` writes the JSONL and summary without downloading files.
+`--skip-existing` keeps a non-empty JSONL instead of querying again.
+
+A paper that already has a PDF or XML is not downloaded again. If that file is
+missing its sidecar, the sidecar is written on the next run. A failed download
+does not leave an empty date folder, and empty directories under the output
+root are removed at startup. Papers already tried without a saved file are not
+retried.
+
+See [Topic collection](docs/examples/topic-collection.md) for the search windows
+and resume rules.
 
 ### Scholar metrics analysis
 

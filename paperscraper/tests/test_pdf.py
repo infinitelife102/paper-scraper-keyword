@@ -143,6 +143,40 @@ class TestPDF:
         save_pdf(paper_metadata=paper_data, filepath="output.pdf")
         assert not os.path.exists("output.pdf")
 
+    def test_citation_pdf_url_returns_true_when_pdf_is_saved(self, tmp_path):
+        doi = "10.1371/journal.pone.0000001"
+        landing = MagicMock()
+        landing.url = "https://journals.plos.org/plosone/article?id=" + doi
+        landing.text = (
+            '<html><meta name="citation_pdf_url" '
+            'content="https://example.test/paper.pdf"></html>'
+        )
+        landing.cookies = {}
+        landing.raise_for_status = MagicMock()
+        pdf = MagicMock()
+        pdf.content = b"%PDF-1.4 test"
+        pdf.raise_for_status = MagicMock()
+        out = tmp_path / "paper.pdf"
+        with (
+            patch("paperscraper.pdf.pdf.requests.head", return_value=landing),
+            patch(
+                "paperscraper.pdf.pdf.requests.get",
+                side_effect=[landing, pdf],
+            ),
+            patch.dict(
+                "paperscraper.pdf.pdf.FALLBACKS",
+                {"bioc_pmc": MagicMock(return_value=False)},
+            ),
+        ):
+            saved = save_pdf(
+                {"doi": doi},
+                filepath=str(out),
+                save_metadata=False,
+                api_keys={},
+            )
+        assert saved is True
+        assert out.read_bytes().startswith(b"%PDF")
+
     def test_save_pdf_from_dump_wrong_type(self):
         with pytest.raises(TypeError):
             save_pdf_from_dump(-1, pdf_path=SAVE_PATH, key_to_save="doi")
