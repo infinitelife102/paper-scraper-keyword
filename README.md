@@ -64,6 +64,7 @@ chemrxiv()  #  Takes <15min -> +50K papers (~30 MB file)
 medrxiv()  #  Takes <5min -> +100K papers (~200 MB file)
 biorxiv()  # Takes <1h -> +450K papers (~800 MB file)
 ```
+
 *NOTE*: Once the dumps are stored, please make sure to restart the python interpreter so that the changes take effect. 
 *NOTE*: If you experience API connection issues, retries and request behavior can be tuned, e.g.:
 
@@ -91,6 +92,7 @@ for all papers you're interested in.
 Use `paperscraper.utils.get_server_dumps_dir()` to inspect the active dump directory.
 
 #### arXiv local dump
+
 Local search can be faster than using the [arXiv API](https://info.arxiv.org/help/api/index.html),
 especially if you plan many queries. Paperscraper provides two backends to bulk-download
 arXiv, [Kaggle](https://www.kaggle.com/) and the
@@ -105,6 +107,7 @@ kaggle auth login
 from paperscraper.get_dumps import arxiv
 arxiv(start_date='2019-01-01', end_date='2026-12-31')
 ```
+
 NOTE: The disadvantage of the `kaggle` backend is that it bulk-downloads **all** of
 [arXiv](https://arxiv.org/). For small API-backed dumps, better use the
 [`arxiv`](https://pypi.org/project/arxiv/) PyPI package backend:
@@ -117,6 +120,7 @@ arxiv(start_date='2024-01-01',end_date='2024-01-04',backend='api')
 Afterwards you can search the local arXiv dump just like the other x-rxiv dumps.
 The direct endpoint is `paperscraper.arxiv.get_arxiv_papers_local`. You can also specify the
 backend directly in the `get_and_dump_arxiv_papers` function:
+
 ```py
 from paperscraper.arxiv import get_and_dump_arxiv_papers
 get_and_dump_arxiv_papers(..., backend='local')
@@ -327,18 +331,15 @@ The documentation example also includes a small researcher-level benchmark with
 self-citation and self-reference trends by discipline, career-stage group, and
 an overall average across disciplines:
 
-<p align="center">
-  <img src="assets/self_citation_grouped_by_discipline.png" alt="Self-citation ratios grouped by discipline" width="620">
-</p>
+![Self-citation ratios grouped by discipline](assets/self_citation_grouped_by_discipline.png)
 
-<p align="center">
-  <img src="assets/self_reference_grouped_by_discipline.png" alt="Self-reference ratios grouped by discipline" width="620">
-</p>
+![Self-reference ratios grouped by discipline](assets/self_reference_grouped_by_discipline.png)
 
 See the [self-citation analysis example](https://jannisborn.github.io/paperscraper/examples/self-citation-analysis/)
 for paper- and author-level workflows using [Semantic Scholar](https://www.semanticscholar.org/).
 
 ## Citation
+
 If you scrape papers with paperscraper, please cite the paperscraper paper :)
 
 ```bibtex
@@ -356,23 +357,7 @@ If you scrape papers with paperscraper, please cite the paperscraper paper :)
 
 ## Contributing and support
 
-Contribution guidelines are in [CONTRIBUTING.md](CONTRIBUTING.md), support
-expectations are in [SUPPORT.md](SUPPORT.md), and project decision-making is
-summarized in [GOVERNANCE.md](GOVERNANCE.md). Release notes are maintained with
+Contribution guidelines are in [CONTRIBUTING.md](CONTRIBUTING.md), support  
+expectations are in [SUPPORT.md](SUPPORT.md), and project decision-making is  
+summarized in [GOVERNANCE.md](GOVERNANCE.md). Release notes are maintained with  
 GitHub releases and PyPI release history rather than in a separate changelog.
-
-## Contributors
-Thanks to the following contributors:
-
-- [@mathinic](https://github.com/mathinic): improved PubMed full text retrieval with
-  additional fallback mechanisms ([BioC-PMC](https://www.ncbi.nlm.nih.gov/research/bionlp/APIs/BioC-PMC/),
-  [eLife](https://elifesciences.org/) and optional Wiley/Elsevier APIs).
-- [@memray](https://github.com/memray): added automatic retries when downloading the
-  {med/bio/chem}rxiv dumps.
-- [@achouhan93](https://github.com/achouhan93): added date-bounded scraping for
-  {med/bio/chem}rxiv.
-- [@daenuprobst](https://github.com/daenuprobst): added direct PDF scraping via
-  `paperscraper.pdf.save_pdf`.
-- [@oppih](https://github.com/oppih): added chemRxiv DOI and URL metadata where available.
-- [@lukasschwab](https://github.com/lukasschwab): enabled support for `arxiv` > `1.4.2`.
-- [@juliusbierk](https://github.com/juliusbierk): bug fixes.
